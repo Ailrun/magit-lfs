@@ -1,0 +1,6 @@
+# Cask files
+.cask/
+
+# EMACS files
+*.elc
+*~

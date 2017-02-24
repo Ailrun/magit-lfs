@@ -1,0 +1,27 @@
+#+TITLE: magit-lfs
+#+AUTHOR: Junyoung Clare Jang <jjc9310@gmail.com>
+#+EMAIL: jjc9310@gmail.com
+#+CATEGORY: magit git-lfs version-manager
+
+* Description
+
+  Magit plugin for [[http://some.url][git-lfs]].
+
+* Magit Binding
+
+  - [&]
+    Initial commands for git-lfs.
+    - [C]
+      git lfs fsck
+    - [f]
+      git lfs fetch
+    - [F]
+      git lfs Pull
+    - [i]
+      git lfs install
+    - [l]
+      git lfs logs
+    - [P]
+      git lfs push
+    - [U]
+      git lfs update
