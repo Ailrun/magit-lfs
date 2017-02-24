@@ -1,27 +1,51 @@
-#+TITLE: magit-lfs
+#+TITLE: Magit LFS
 #+AUTHOR: Junyoung Clare Jang <jjc9310@gmail.com>
 #+EMAIL: jjc9310@gmail.com
 #+CATEGORY: magit git-lfs version-manager
 
-* Description
+[[https://git-lfs.github.com/][Git LFS]] for [[https://github.com/magit/magit][Magit]], glorious Git client for Emacs!
 
-  Magit plugin for [[http://some.url][git-lfs]].
+* WARNING! 
+  This repository is not yet completed. Please wait for a moment. 
+  I would really appreciate any help to complete this repo.
 
 * Magit Binding
-
-  - [&]
-    Initial commands for git-lfs.
-    - [C]
+  - ~&~
+    Initial commands for magit-lfs.
+    - ~C~
       git lfs fsck
-    - [f]
+    - ~f~
       git lfs fetch
-    - [F]
+    - ~F~
       git lfs Pull
-    - [i]
+    - ~i~
       git lfs install
-    - [l]
+    - ~l~
       git lfs logs
-    - [P]
+    - ~P~
       git lfs push
-    - [U]
+    - ~U~
       git lfs update
+
+* Todo List
+  - [-] Core functionality [1/3]
+    - [X] Make magit popup
+    - [ ] Checking git lfs status
+    - [ ] Connect to git lfs
+  - [ ] Command specific functionality [0/12]
+    - [ ] checkout
+    - [ ] fetch
+    - [ ] fsck
+    - [ ] install
+    - [ ] logs
+    - [ ] ls-files
+      - Not for popup
+    - [ ] pull
+    - [ ] push
+    - [ ] status
+      - Not for popup
+    - [ ] track
+      - Not for popup
+    - [ ] untrack
+      - Not for popup
+    - [ ] update
