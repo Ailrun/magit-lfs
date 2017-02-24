@@ -2,50 +2,55 @@
 #+AUTHOR: Junyoung Clare Jang <jjc9310@gmail.com>
 #+EMAIL: jjc9310@gmail.com
 #+CATEGORY: magit git-lfs version-manager
+#+OPTIONS: toc:nil
 
-[[https://git-lfs.github.com/][Git LFS]] for [[https://github.com/magit/magit][Magit]], glorious Git client for Emacs!
+* Magit LFS
 
-* WARNING! 
-  This repository is not yet completed. Please wait for a moment. 
-  I would really appreciate any help to complete this repo.
+  [[https://git-lfs.github.com/][Git LFS]] for [[https://github.com/magit/magit][Magit]], glorious Git client for Emacs!
 
-* Magit Binding
-  - ~&~
-    Initial commands for magit-lfs.
-    - ~C~
-      git lfs fsck
-    - ~f~
-      git lfs fetch
-    - ~F~
-      git lfs Pull
-    - ~i~
-      git lfs install
-    - ~l~
-      git lfs logs
-    - ~P~
-      git lfs push
-    - ~U~
-      git lfs update
+#+TOC: headlines local
 
-* Todo List
-  - [-] Core functionality [1/3]
-    - [X] Make magit popup
-    - [ ] Checking git lfs status
-    - [ ] Connect to git lfs
-  - [ ] Command specific functionality [0/12]
-    - [ ] checkout
-    - [ ] fetch
-    - [ ] fsck
-    - [ ] install
-    - [ ] logs
-    - [ ] ls-files
-      - Not for popup
-    - [ ] pull
-    - [ ] push
-    - [ ] status
-      - Not for popup
-    - [ ] track
-      - Not for popup
-    - [ ] untrack
-      - Not for popup
-    - [ ] update
+** WARNING! 
+   This repository is not yet completed. Please wait for a moment. 
+   I would really appreciate any help to complete this repo.
+
+** Magit Binding
+   - ~&~
+     Initial commands for magit-lfs.
+     - ~C~
+       git lfs fsck
+     - ~f~
+       git lfs fetch
+     - ~F~
+       git lfs Pull
+     - ~i~
+       git lfs install
+     - ~l~
+       git lfs logs
+     - ~P~
+       git lfs push
+     - ~U~
+       git lfs update
+
+** Todo List
+   - Core functionality [1/3]
+     - [X] Make magit popup
+     - [ ] Checking git lfs status
+     - [ ] Connect to git lfs
+   - Command specific functionality [0/12]
+     - [ ] checkout
+     - [ ] fetch
+     - [ ] fsck
+     - [ ] install
+     - [ ] logs
+     - [ ] ls-files
+       - Not for popup
+     - [ ] pull
+     - [ ] push
+     - [ ] status
+       - Not for popup
+     - [ ] track
+       - Not for popup
+     - [ ] untrack
+       - Not for popup
+     - [ ] update
