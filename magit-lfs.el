@@ -8,7 +8,7 @@
 ;; Version: 0.0.1
 ;; Package-Requires: (magit)
 ;; Keywords: magit git lfs tools vc
-;; URL: https://github.com/ailrun/package-stack
+;; URL: https://github.com/ailrun/magit-lfs
 
 ;; This file is not part of GNU Emacs.
 
@@ -38,41 +38,43 @@
 ;;
 ;; 2. Use following codes in your Emacs setting.
 ;;
-;; - For Vanilla Emacs:
+;; - For Vanilla Emacs (After install magit, dash, magit-lfs):
 ;;
 ;;   (require 'magit-lfs)
 ;;   (auto-inject-magit-lfs t)
 ;;
-;; - For Emacs with `use-package':
+;; - For Emacs with `use-package' (After load magit, dash):
 ;;
 ;;   (use-package magit-lfs
 ;;      :ensure t
+;;      :pin melpa)
+;;
+;; - For Emacs with `req-package' (After install dash):
+;;
+;;   (req-package magit-lfs
+;;      :loader :elpa
 ;;      :pin melpa
-;;      :config
-;;      (auto-inject-magit-lfs t))
+;;      :require (magit))
 ;;
 ;; For more detail information, please see README.md
 
 ;;; Code:
 
 (require 'magit)
-
-(defgroup magit-lfs nil
-  ""
-  :group 'magit)
+(require 'magit-lfs-core)
 
 (magit-define-popup magit-lfs/top-popup
   "Popup console for top-level magit-lfs commands."
   'magit-lfs
   :man-page "git-lfs"
   :actions '("Popup and Commands"
-             (?C "fsck, Check file" magit-lfs/fsck)
              (?f "fetch, Download file" magit-lfs/fetch-popup)
              (?F "pull, Fetch & checkout files" magit-lfs/pull-popup)
              (?i "install, Install configuration" magit-lfs/install-popup)
              (?l "logs, Show error logs for LFS" magit-lfs/logs-popup)
              (?P "push, Push files to end point" magit-lfs/push-popup)
-             (?U "update, Update hook for repo" magit-lfs/update-popup)))
+             (?U "update, Update hook for repo" magit-lfs/update-popup)
+             (?! "fsck, Check file" magit-lfs/fsck)))
 
 (magit-define-popup-action 'magit-dispatch-popup
   ?& "Magit-LFS" #'magit-lfs/top-popup ?!)
@@ -131,23 +133,55 @@
   'magit-lfs
   :man-page "git-lfs-update"
   :switches '((?f "Update hook, clobbering existing contents" "--force"))
-  :actions '(("Actions"
-              (?r "update" magit-lfs/update))))
+  :actions '("Actions"
+             (?r "update" magit-lfs/update)))
 
 
 (defun magit-lfs/fsck ()
-  "Magit binding for git lfs fsck.")
+  "Magit binding for git lfs fsck."
+  (interactive)
+  (magit-lfs/with-lfs 'magit-run-git-async "fsck"))
 
 
-(defun magit-lfs/fetch-upstream ()
-  "Magit binding for git lfs fetch upstream.")
+(defun magit-lfs/fetch (branch target args)
+  "Magit binding for git lfs fetch."
+  (run-hooks 'magit-credential-hook)
+  (-let [(remote . target)
+         (magit-split-branch-name target)]
+    (magit-lfs/with-lfs 'magit-run-git-async
+      "fetch" args remote
+      (format "%s:refs/heads/%s" branch target))))
+
+(defun magit-lfs/fetch-from-upstream (args &optional upstream)
+  "Magit binding for git lfs fetch upstream."
+  (interactive
+   (list (magit-lfs/fetch-arguments)))
+  (--if-let (magit-get-current-branch)
+      (progn
+        (when upstream
+          (magit-set-branch*merge/remote it upstream))
+        (-if-let (target (magit-get-upstream-branch it))
+            (magit-lfs/fetch it target args)
+          (user-error "No upstream is configured for %s" it)))
+    (user-error "No branch is checked out")))
 
 
-(defun magit-lfs/install-to-local-config ()
-  "Magit binding for git lfs install --local.")
+(defun magit-lfs/install (args)
+  "Magit binding for git lfs install."
+  (magit-lfs/with-lfs 'magit-run-git-async
+    "install" args))
 
-(defun magit-lfs/install-to-global-config ()
-  "Magit binding for git lfs install.")
+(defun magit-lfs/install-to-local-config (args)
+  "Magit binding for git lfs install --local."
+  (interactive
+   (list (magit-lfs/install-arguments)))
+  (magit-lfs/install (cons "--local" args)))
+
+(defun magit-lfs/install-to-global-config (args)
+  "Magit binding for git lfs install."
+  (interactive
+   (list (magit-lfs/install-arguments)))
+  (magit-lfs/install args))
 
 
 (defun magit-lfs/logs-boomtown ()
@@ -164,16 +198,20 @@
   "Magit binding for git lfs ls-files.")
 
 
-(defun magit-lfs/pull-upstream ()
+(defun magit-lfs/pull-from-upstream ()
   "Magit binding for git lfs pull upstream.")
 
 
-(defun magit-lfs/push-upstream ()
+(defun magit-lfs/push-to-upstream ()
   "Magit binding for git lfs push upstream.")
 
 
-(defun magit-lfs/update ()
-  "Magit binding for git lfs update.")
+(defun magit-lfs/update (args)
+  "Magit binding for git lfs update."
+  (interactive
+   (list (magit-lfs/fetch-arguments)))
+  (magit-lfs/with-lfs 'magit-run-git-async
+    "update" args))
 
 
 

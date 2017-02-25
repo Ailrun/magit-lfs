@@ -17,8 +17,6 @@
 ** Magit Binding
    - ~&~
      Initial commands for magit-lfs.
-     - ~C~
-       git lfs fsck
      - ~f~
        git lfs fetch
      - ~F~
@@ -31,17 +29,19 @@
        git lfs push
      - ~U~
        git lfs update
+     - ~!~
+       git lfs fsck
 
 ** Todo List
-   - Core functionality [1/3]
+   - Core functionality [2/3]
      - [X] Make magit popup
      - [ ] Checking git lfs status
-     - [ ] Connect to git lfs
-   - Command specific functionality [0/12]
+     - [X] Connect to git lfs
+   - Command specific functionality [3/12]
      - [ ] checkout
      - [ ] fetch
-     - [ ] fsck
-     - [ ] install
+     - [X] fsck
+     - [X] install
      - [ ] logs
      - [ ] ls-files
        - Not for popup
@@ -50,7 +50,5 @@
      - [ ] status
        - Not for popup
      - [ ] track
-       - Not for popup
      - [ ] untrack
-       - Not for popup
-     - [ ] update
+     - [X] update
