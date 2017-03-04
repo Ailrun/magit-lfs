@@ -23,8 +23,6 @@
        git lfs Pull
      - ~i~
        git lfs install
-     - ~l~
-       git lfs logs
      - ~P~
        git lfs push
      - ~U~
@@ -37,18 +35,16 @@
      - [X] Make magit popup
      - [ ] Checking git lfs status
      - [X] Connect to git lfs
-   - Command specific functionality [3/12]
+   - Command specific functionality [6/12]
      - [ ] checkout
-     - [ ] fetch
+     - [X] fetch
      - [X] fsck
      - [X] install
      - [ ] logs
      - [ ] ls-files
-       - Not for popup
-     - [ ] pull
-     - [ ] push
+     - [X] pull
+     - [X] push
      - [ ] status
-       - Not for popup
      - [ ] track
      - [ ] untrack
      - [X] update

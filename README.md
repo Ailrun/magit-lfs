@@ -6,9 +6,9 @@
 
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3d95b68">1.1. WARNING!</a></li>
-<li><a href="#orgf800136">1.2. Magit Binding</a></li>
-<li><a href="#orgab23582">1.3. Todo List</a></li>
+<li><a href="#org072e94f">1.1. WARNING!</a></li>
+<li><a href="#org376e356">1.2. Magit Binding</a></li>
+<li><a href="#org1200ca0">1.3. Todo List</a></li>
 </ul>
 </div>
 
@@ -29,8 +29,6 @@ I would really appreciate any help to complete this repo.
         git lfs Pull
     -   `i`
         git lfs install
-    -   `l`
-        git lfs logs
     -   `P`
         git lfs push
     -   `U`
@@ -45,18 +43,16 @@ I would really appreciate any help to complete this repo.
     -   [X] Make magit popup
     -   [ ] Checking git lfs status
     -   [X] Connect to git lfs
--   Command specific functionality <code>[3/12]</code>
+-   Command specific functionality <code>[6/12]</code>
     -   [ ] checkout
-    -   [ ] fetch
+    -   [X] fetch
     -   [X] fsck
     -   [X] install
     -   [ ] logs
     -   [ ] ls-files
-        -   Not for popup
-    -   [ ] pull
-    -   [ ] push
+    -   [X] pull
+    -   [X] push
     -   [ ] status
-        -   Not for popup
     -   [ ] track
     -   [ ] untrack
     -   [X] update
