@@ -41,7 +41,6 @@
 ;; - For Vanilla Emacs (After install magit, magit-lfs):
 ;;
 ;;   (require 'magit-lfs)
-;;   (auto-inject-magit-lfs t)
 ;;
 ;; - For Emacs with `use-package' (After load magit, dash):
 ;;

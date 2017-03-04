@@ -10,6 +10,74 @@
 
 #+TOC: headlines local
 
+** Installation
+
+   1. In your emacs setting file, initialize [[https://github.com/melpa/melpa][melpa]] package.
+   2. Follows instruction for your package managing method.
+
+      - For ~package.el~
+        1. Install magit and magit-lfs via ~package-install~ command.
+        2. Write following codes to your emacs setting file. (usually ~.emacs~ or ~.emacs.d/init.el~)
+
+           #+BEGIN_SRC elisp
+             (require 'package)
+
+             ;; package repository settings
+
+             (package-initialize)
+
+             ;; Settings ...
+
+             (require 'magit)
+
+             ;; Settings ...
+
+             (require 'magit-lfs)
+           #+END_SRC
+
+      - For ~use-package.el~
+
+        1. Install magit and load it.
+        2. Write following codes to your emacs setting file.
+
+           #+BEGIN_SRC elisp
+             (require 'package)
+             (require 'use-package)
+
+             ;; Settings ...
+
+             (package-initialize)
+
+             ;; After load magit
+
+             (use-package magit-lfs
+                  :ensure t
+                  :pin melpa)
+           #+END_SRC
+
+      - For ~req-package.el~
+
+        1. Write following codes to your emacs settings file.
+
+           #+BEGIN_SRC elisp
+             (require 'package)
+
+             ;; Settings ...
+
+             (package-initialize)
+
+             ;; Settings ...
+
+             (require 'req-package)
+
+             ;; Settings ...
+
+             (req-package magit-lfs
+               :loader :elpa
+               :pin melpa
+               :require (magit))
+           #+END_SRC
+
 ** Magit Binding
    - ~&~
      Initial commands for magit-lfs.

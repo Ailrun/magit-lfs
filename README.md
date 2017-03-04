@@ -6,10 +6,71 @@
 
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga3d7099">1.1. Magit Binding</a></li>
-<li><a href="#orgc5eba14">1.2. Todo List</a></li>
+<li><a href="#org412b721">1.1. Installation</a></li>
+<li><a href="#org9f658a4">1.2. Magit Binding</a></li>
+<li><a href="#orgd691b7d">1.3. Todo List</a></li>
 </ul>
 </div>
+
+
+## Installation
+
+1.  In your emacs setting file, initialize [melpa](https://github.com/melpa/melpa) package.
+2.  Follows instruction for your package managing method.
+    -   For `package.el`
+        1.  Install magit and magit-lfs via `package-install` command.
+        2.  Write following codes to your emacs setting file. (usually `.emacs` or `.emacs.d/init.el`)
+            
+                (require 'package)
+                
+                ;; package repository settings
+                
+                (package-initialize)
+                
+                ;; Settings ...
+                
+                (require 'magit)
+                
+                ;; Settings ...
+                
+                (require 'magit-lfs)
+    
+    -   For `use-package.el`
+        1.  Install magit and load it.
+        2.  Write following codes to your emacs setting file.
+            
+                (require 'package)
+                (require 'use-package)
+                
+                ;; Settings ...
+                
+                (package-initialize)
+                
+                ;; After load magit
+                
+                (use-package magit-lfs
+                     :ensure t
+                     :pin melpa)
+    
+    -   For `req-package.el`
+        1.  Write following codes to your emacs settings file.
+            
+                (require 'package)
+                
+                ;; Settings ...
+                
+                (package-initialize)
+                
+                ;; Settings ...
+                
+                (require 'req-package)
+                
+                ;; Settings ...
+                
+                (req-package magit-lfs
+                  :loader :elpa
+                  :pin melpa
+                  :require (magit))
 
 
 ## Magit Binding
