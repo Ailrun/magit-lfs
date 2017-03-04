@@ -6,17 +6,10 @@
 
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org072e94f">1.1. WARNING!</a></li>
-<li><a href="#org376e356">1.2. Magit Binding</a></li>
-<li><a href="#org1200ca0">1.3. Todo List</a></li>
+<li><a href="#orga3d7099">1.1. Magit Binding</a></li>
+<li><a href="#orgc5eba14">1.2. Todo List</a></li>
 </ul>
 </div>
-
-
-## WARNING!
-
-This repository is not yet completed. Please wait for a moment. 
-I would really appreciate any help to complete this repo.
 
 
 ## Magit Binding

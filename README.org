@@ -10,10 +10,6 @@
 
 #+TOC: headlines local
 
-** WARNING! 
-   This repository is not yet completed. Please wait for a moment. 
-   I would really appreciate any help to complete this repo.
-
 ** Magit Binding
    - ~&~
      Initial commands for magit-lfs.

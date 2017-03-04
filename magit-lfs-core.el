@@ -1,4 +1,4 @@
-;;; magit-lfs-core --- Core functions/macros for magit-lfs
+;;; magit-lfs-core.el --- Core functions/macros for magit-lfs
 
 ;; Copyright (C) 2017- Junyoung Clare Jang
 
@@ -6,7 +6,7 @@
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Created: 25 Feb 2017
 ;; Version: 0.3.1
-;; Package-Requires: (magit)
+;; Package-Requires: ((emacs "24.3") (magit "20170128.745"))
 ;; Keywords: magit git lfs tools vc
 ;; URL: https://github.com/ailrun/magit-lfs
 
@@ -36,25 +36,25 @@
   ""
   :group 'magit)
 
-(defcustom magit-lfs/git-lfs-executable "git-lfs"
+(defcustom magit-lfs-git-lfs-executable "git-lfs"
   "Git LFS executable for magit-lfs."
   :group 'magit-lfs
   :version "0.0.1"
   :type 'string)
 
-(defcustom magit-lfs/git-lfs-command "lfs"
+(defcustom magit-lfs-git-lfs-command "lfs"
   "Git LFS command for magit-lfs."
   :group 'magit-lfs
   :version "0.0.1"
   :type 'string)
 
-(defun magit-lfs/with-lfs (magit-function command &rest args)
+(defun magit-lfs-with-lfs (magit-function command &rest args)
   "Internal function for magit-lfs."
   (declare (indent 1))
-  (if (null (executable-find magit-lfs/git-lfs-executable))
+  (if (null (executable-find magit-lfs-git-lfs-executable))
       (user-error "Git LFS executable %s is not installed; aborting"
-             magit-lfs/git-lfs-executable)
-    (apply magit-function magit-lfs/git-lfs-command command args)))
+             magit-lfs-git-lfs-executable)
+    (apply magit-function magit-lfs-git-lfs-command command args)))
 
 (provide 'magit-lfs-core)
 
