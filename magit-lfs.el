@@ -6,7 +6,7 @@
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Created: 25 Feb 2017
 ;; Version: 0.3.1
-;; Package-Requires: ((emacs "24.3") (magit "20170128.745"))
+;; Package-Requires: ((emacs "24.4") (magit "2.10.2"))
 ;; Keywords: magit git lfs tools vc
 ;; URL: https://github.com/ailrun/magit-lfs
 
