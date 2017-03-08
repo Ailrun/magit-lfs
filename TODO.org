@@ -1,0 +1,30 @@
+#+TITLE: Magit LFS TODO
+#+AUTHOR: Junyoung Clare Jang <jjc9310@gmail.com>
+#+EMAIL: jjc9310@gmail.com
+#+CATEGORY: magit git-lfs version-manager
+#+OPTIONS: toc:nil
+
+* Magit LFS
+
+** TODO For version 0.4.0
+
+   - Add track/untrack listing [0%]
+     - [ ] listing (new buffer or just in magit?)
+     - [ ] track
+     - [ ] untrack
+     - [ ] .gitattributes file editing
+
+** TODO For future version
+
+   - Add status checking [0%]
+     - [ ] status (new buffer or just in magit?)
+   - Add lock/unlock listing [0%]
+     - [ ] listing (new buffer or just in magit?)
+     - [ ] lock
+     - [ ] unlock
+   - Add logs/ls-files [0%]
+     - [ ] logging buffer
+     - [ ] logs
+     - [ ] ls-files
+   - Add clone command [0%]
+     - [ ] clone command
