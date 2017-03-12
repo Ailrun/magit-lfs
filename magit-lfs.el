@@ -1,12 +1,12 @@
 ;;; magit-lfs.el --- Magit plugin for Git LFS
 
-;; Copyright (C) 2017- Junyoung Clare Jang
+;; Copyright (C) 2017 Junyoung Clare Jang
 
 ;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Created: 25 Feb 2017
 ;; Version: 0.3.1
-;; Package-Requires: ((emacs "24.4") (magit "2.10.2"))
+;; Package-Requires: ((emacs "24.4") (magit "2.10.3") (dash "2.13.0"))
 ;; Keywords: magit git lfs tools vc
 ;; URL: https://github.com/ailrun/magit-lfs
 
@@ -59,8 +59,32 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'magit)
-(require 'magit-lfs-core)
+
+(defgroup magit-lfs nil
+  "Magit powered by git-lfs."
+  :group 'magit)
+
+(defcustom magit-lfs-git-lfs-executable "git-lfs"
+  "Git LFS executable for magit-lfs."
+  :group 'magit-lfs
+  :version "0.0.1"
+  :type 'string)
+
+(defcustom magit-lfs-git-lfs-command "lfs"
+  "Git LFS command for magit-lfs."
+  :group 'magit-lfs
+  :version "0.0.1"
+  :type 'string)
+
+(defun magit-lfs-with-lfs (magit-function command &rest args)
+  "Internal function for magit-lfs."
+  (declare (indent 1))
+  (if (null (executable-find magit-lfs-git-lfs-executable))
+      (user-error "Git LFS executable %s is not installed; aborting"
+             magit-lfs-git-lfs-executable)
+    (apply magit-function magit-lfs-git-lfs-command command args)))
 
 (magit-define-popup magit-lfs-top-popup
   "Popup console for top-level magit-lfs commands."
