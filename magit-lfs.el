@@ -61,6 +61,7 @@
 
 (require 'dash)
 (require 'magit)
+(require 'transient)
 
 (defgroup magit-lfs nil
   "Magit powered by git-lfs."
@@ -79,141 +80,109 @@
   :type 'string)
 
 (defun magit-lfs-with-lfs (magit-function command &rest args)
-  "Internal function for magit-lfs."
+  "Internal function for magit-lfs to run MAGIT-FUNCTION with COMMAND and ARGS."
   (declare (indent 1))
   (if (null (executable-find magit-lfs-git-lfs-executable))
       (user-error "Git LFS executable %s is not installed; aborting"
              magit-lfs-git-lfs-executable)
     (apply magit-function magit-lfs-git-lfs-command command args)))
 
-(magit-define-popup magit-lfs-top-popup
+(define-transient-command magit-lfs ()
   "Popup console for top-level magit-lfs commands."
-  'magit-lfs
   :man-page "git-lfs"
-  :actions '("Popup and Commands"
-             (?f "fetch, Download file"
-                 magit-lfs-fetch-popup)
-             (?F "pull, Fetch & checkout files"
-                 magit-lfs-pull-popup)
-             (?i "install, Install configuration"
-                 magit-lfs-install-popup)
-             ;; (?l "logs, Show error logs for LFS"
-             ;;     magit-lfs-logs-popup)
-             (?P "push, Push files to end point"
-                 magit-lfs-push-popup)
-             (?U "update, Update hook for repo"
-                 magit-lfs-update-popup)
-             (?! "fsck, Check file"
-                 magit-lfs-fsck)))
+  ["Actions"
+   ("f" "fetch, Download file" magit-lfs-fetch)
+   ("F" "pull, Fetch & checkout files" magit-lfs-pull)
+   ("i" "install, Install configuration" magit-lfs-install)
+   ;; ("l" "logs, Show error logs for LFS" magit-lfs-logs)
+   ("P" "push, Push files to end point" magit-lfs-push)
+   ("U" "update, Update hook for repo" magit-lfs-update)
+   ("!" "fsck, Check file" magit-lfs-fsck)])
 
-(magit-define-popup-action 'magit-dispatch-popup
-  ?& "Magit-LFS" #'magit-lfs-top-popup ?!)
+(transient-insert-suffix 'magit-dispatch "!"
+  '("@" "Magit-LFS" magit-lfs))
 (define-key magit-status-mode-map
-  "&" #'magit-lfs-top-popup)
+  "@" #'magit-lfs)
 
-(magit-define-popup magit-lfs-fetch-popup
+(define-transient-command magit-lfs-fetch ()
   ""
-  'magit-lfs
   :man-page "git-lfs-fetch"
-  :switches '((?p "Prune old/unreferenced after fetch"
-                  "--prune")
-              (?a "Download all objects"
-                  "--all")
-              (?r "Download recent changes"
-                  "--recent"))
-  :options '((?I "Include"
-                 "--include=")
-             (?X "Exclude"
-                 "--exclude="))
-  :actions '("Fetch from"
-             (?p magit-get-push-remote
-                 magit-lfs-fetch-from-pushremote)
-             (?u magit-get-remote
-                 magit-lfs-fetch-from-upstream)
-             (?e "elsewhere"
-                 magit-lfs-fetch)
-             "Fetch"
-             (?o "another branch"
-                 magit-lfs-fetch-branch)))
+  ["Arguments"
+   ("-p" "Prune old/unreferenced after fetch" "--prune")
+   ("-a" "Download all objects" "--all")
+   ("-r" "Download recent changes" "--recent")
+   ("-I" "Include" "--include=")
+   ("-X" "Exclude" "--exclude=")]
+  ["Fetch from"
+   ("p" magit-lfs-fetch-from-pushremote)
+   ("u" magit-lfs-fetch-from-upstream)
+   ("e" "elsewhere" magit-lfs-fetch-elsewhere)]
+  ["Fetch"
+   ("o" "another branch" magit-lfs-fetch-branch)])
 
-(magit-define-popup magit-lfs-pull-popup
+(define-transient-command magit-lfs-pull ()
   ""
-  'magit-lfs
   :man-page "git-lfs-pull"
-  :options '((?I "Include"
-                 "--include=")
-             (?X "Exclude"
-                 "--exclude="))
-  :actions '((lambda ()
-               (--if-let (magit-get-current-branch)
-                   (concat
-                    (propertize "Pull into " 'face 'magit-popup-heading)
-                    (propertize it 'face 'magit-branch-local)
-                    (propertize " from" 'face 'magit-popup-heading))
-                 (propertize "Pull from" 'face 'magit-popup-heading)))
-             ;; (?p magit-get-push-branch magit-pull-from-pushremote)
-             (?u magit-get-upstream-branch
-                 magit-lfs-pull-from-upstream)
-             (?e "elsewhere"
-                 magit-lfs-pull)
-             "Fetch"
-             (?o "another branch" magit-lfs-fetch-branch)))
+  ["Arguments"
+   ("-I" "Include" "--include=")
+   ("-X" "Exclude" "--exclude=")]
+  [:description
+   (lambda ()
+     (if-let ((branch (magit-get-current-branch)))
+         (concat
+          (propertize "Pull into " 'face 'transient-heading)
+          (propertize branch       'face 'magit-branch-local)
+          (propertize " from"      'face 'transient-heading))
+       (propertize "Pull from" 'face 'transient-heading)))
+   ("p" magit-lfs-pull-from-pushremote)
+   ("u" magit-lfs-pull-from-upstream)
+   ("e" "elsewhere" magit-lfs-pull-elsewhere)]
+  ["Fetch"
+   ("o" "another branch" magit-lfs-fetch-branch)])
 
-(magit-define-popup magit-lfs-install-popup
+(define-transient-command magit-lfs-install ()
   ""
-  'magit-lfs
   :man-page "git-lfs-install"
-  :options '((?F "Set LFS by overwriting values"
-                 "--force")
-             (?s "Skips automatic downloading for clone/pull"
-                 "--skip-smudge"))
-  :actions '("Set in"
-             (?l "Local repository's config"
-                 magit-lfs-install-to-local-config)
-             (?g "Global config"
-                 magit-lfs-install-to-global-config)))
+  ["Arguments"
+   ("-F" "Set LFS by overwriting values" "--force")
+   ("-s" "Skips automatic downloading for clone/pull" "--skip-smudge")]
+  ["Set in"
+   ("l" "Local repository's config" magit-lfs-install-to-local-config)
+   ("g" "Global config" magit-lfs-install-to-global-config)])
 
-;; (magit-define-popup magit-lfs-logs-popup
+;; (define-transient-command magit-lfs-logs ()
 ;;   ""
-;;   'magit-lfs
 ;;   :man-page "git-lfs-logs"
 ;;   :actions '("Actions"
 ;;              (?b "Triggers a dummy exception" magit-lfs-logs-boomtown)
 ;;              (?c "Clear error logs" magit-lfs-logs-clear)
 ;;              (?s "Show logs" magit-lfs-logs-show)))
 
-(magit-define-popup magit-lfs-push-popup
+(define-transient-command magit-lfs-push ()
   ""
-  'magit-lfs
   :man-page "git-lfs-push"
-  :switches '((?d "Dry run"
-                  "--dry-run")
-              (?a "Push all objects to remote"
-                  "--all"))
-  :actions '((lambda ()
-               (--when-let (magit-get-current-branch)
-                 (concat (propertize "Push " 'face 'magit-popup-heading)
-                         (propertize it      'face 'magit-branch-local)
-                         (propertize " to"   'face 'magit-popup-heading))))
-             (?p magit--push-current-to-pushremote-desc
-                 magit-lfs-push-current-to-pushremote)
-             (?u magit--push-current-to-upstream-desc
-                 magit-lfs-push-current-to-upstream)
-             (?e "elsewhere\n"
-                 magit-lfs-push-current)
-             "Push"
-             (?o "another branch"
-                 magit-lfs-push)))
+  ["Arguments"
+   ("-d" "Dry run" "--dry-run")
+   ("-a" "Push all objects to remote" "--all")]
+  [:description
+   (lambda ()
+     (when-let ((branch (magit-get-current-branch)))
+       (concat (propertize "Push " 'face 'transient-heading)
+               (propertize branch  'face 'magit-branch-local)
+               (propertize " to"   'face 'transient-heading))))
+   ("p" magit-lfs-push-current-to-pushremote)
+   ("u" magit-lfs-push-current-to-upstream)
+   ("e" "elsewhere" magit-lfs-push-current-to-elsewhere)]
+  ["Push"
+   ("o" "another branch" magit-lfs-push-another-branch)])
 
-(magit-define-popup magit-lfs-update-popup
+(define-transient-command magit-lfs-update ()
   ""
-  'magit-lfs
   :man-page "git-lfs-update"
-  :switches '((?f "Update hook, clobbering existing contents"
-                  "--force"))
-  :actions '("Actions"
-             (?r "update"
-                 magit-lfs-update)))
+  ["Arguments"
+   ("-f" "Update hook, clobbering existing contents" "--force")]
+  ["Updates"
+   ("h" "hooks" magit-lfs-update-hooks)])
 
 
 (defun magit-lfs-fsck ()
@@ -222,63 +191,71 @@
   (magit-lfs-with-lfs 'magit-run-git-async "fsck"))
 
 
-(defun magit-lfs-fetch-command (remote args)
+(defun magit-lfs-fetch-arguments nil
+  ""
+  (transient-args 'magit-lfs-fetch))
+
+(defun magit-lfs-git-lfs-fetch (remote args)
+  "Internal function for git lfs fetch REMOTE with ARGS."
   (run-hooks 'magit-credential-hook)
-  (magit-lfs-with-lfs 'magit-run-git-async
-    "fetch" remote args))
+  (magit-lfs-with-lfs 'magit-run-git-async "fetch" remote args))
 
-(defun magit-lfs-fetch-from-pushremote (args)
-  "Magit binding for git lfs fetch push-remote of the current branch."
-  (interactive
-   (list (magit-lfs-fetch-arguments)))
-  (--if-let (magit-get-push-remote)
-      (magit-lfs-fetch-command it args)
-    (--if-let (magit-get-current-branch)
-        (user-error "No push-remote is configured for %s" it)
-      (user-error "No branch is checked out"))))
+(define-suffix-command magit-lfs-fetch-from-pushremote (args)
+  "Magit binding for git lfs fetch push-remote of the current branch with ARGS."
+  :description 'magit-fetch--pushremote-description
+  (interactive (list (magit-lfs-fetch-arguments)))
+  (let ((remote (magit-get-push-remote)))
+    (when (or current-prefix-arg
+              (not (member remote (magit-list-remotes))))
+      (let ((var (magit--push-remote-variable)))
+        (setq remote
+              (magit-read-remote (format "Set %s and fetch from there" var)))
+        (magit-set remote var)))
+    (magit-lfs-git-lfs-fetch remote args)))
 
-(defun magit-lfs-fetch-from-upstream (args)
-  "Magit binding for git lfs fetch upstream."
-  (interactive
-   (list (magit-lfs-fetch-arguments)))
-  (--if-let (magit-get-remote)
-      (magit-lfs-fetch-command it args)
-    (--if-let (magit-get-current-branch)
-        (user-error "No upstream is configured for %s" it)
-      (user-error "No branch is checked out"))))
+(define-suffix-command magit-lfs-fetch-from-upstream (upstream args)
+  "Magit binding for git lfs fetch UPSTREAM with ARGS."
+  :if (lambda () (magit-get-current-remote t))
+  :description (lambda () (magit-get-current-remote t))
+  (interactive (list (magit-get-current-remote t)
+                     (magit-lfs-fetch-arguments)))
+  (unless upstream
+    (error "The \"current\" upstream could not be determined"))
+  (magit-lfs-git-lfs-fetch upstream args))
 
-(defun magit-lfs-fetch (remote args)
-  "Magit binding for git lfs fetch REMOTE."
-  (interactive
-   (list (magit-read-remote "Fetch remote")
-         (magit-lfs-fetch-arguments)))
-  (magit-lfs-fetch-command remote args))
+(defun magit-lfs-fetch-elsewhere (remote args)
+  "Magit binding for git lfs fetch REMOTE with ARGS."
+  (interactive (list (magit-read-remote "Fetch remote")
+                     (magit-lfs-fetch-arguments)))
+  (magit-lfs-git-lfs-fetch remote args))
 
 (defun magit-lfs-fetch-branch (remote branch args)
-  "Magit binding for git lfs fetch REMOTE BRANCH."
+  "Magit binding for git lfs fetch REMOTE/BRANCH with ARGS."
   (interactive
    (let ((remote (magit-read-remote-or-url "Fetch from remote or url")))
      (list remote
            (magit-read-remote-branch "Fetch branch" remote)
            (magit-lfs-fetch-arguments))))
-  (magit-lfs-fetch-command remote (cons branch args)))
+  (magit-lfs-git-lfs-fetch remote (cons branch args)))
 
 
-(defun magit-lfs-install-command (args)
-  (magit-lfs-with-lfs 'magit-run-git-async
-    "install" args))
+(defun magit-lfs-install-arguments nil
+  ""
+  (transient-args 'magit-lfs-install))
+
+(defun magit-lfs-git-lfs-install (args)
+  "Internal function for git lfs install with ARGS."
+  (magit-lfs-with-lfs 'magit-run-git-async "install" args))
 
 (defun magit-lfs-install-to-local-config (args)
-  "Magit binding for git lfs install --local."
-  (interactive
-   (list (magit-lfs-install-arguments)))
-  (magit-lfs-install-command (cons "--local" args)))
+  "Magit binding for git lfs install --local with ARGS."
+  (interactive (list (magit-lfs-install-arguments)))
+  (magit-lfs-git-lfs-install (cons "--local" args)))
 
 (defun magit-lfs-install-to-global-config (args)
-  "Magit binding for git lfs install."
-  (interactive
-   (list (magit-lfs-install-arguments)))
-  (magit-lfs-install-command args))
+  "Magit binding for git lfs install with ARGS."
+  (interactive (list (magit-lfs-install-arguments)))
+  (magit-lfs-git-lfs-install args))
 
 
 ;; (defun magit-lfs-logs-boomtown ()
@@ -295,98 +272,149 @@
 ;;   "Magit binding for git lfs ls-files.")
 
 
-(defun magit-lfs-pull-command (source args)
+(defun magit-lfs-pull-arguments nil
+  ""
+  (transient-args 'magit-lfs-pull))
+
+(defun magit-lfs-git-lfs-pull (remote branch args)
+  "Internal function for git lfs pull REMOTE/BRANCH with ARGS."
   (run-hooks 'magit-credential-hook)
-  (-let [(remote . branch)
-         (magit-split-branch-name source)]
-    (magit-lfs-with-lfs 'magit-run-git-with-editor
-      "pull" args remote branch)))
+  (magit-lfs-with-lfs 'magit-run-git-with-editor "pull" args remote branch))
 
-(defun magit-lfs-pull-from-pushremote (args)
-  "Magit binding for git lfs pull push-remote of the current branch."
-  (interactive
-   (list (magit-lfs-pull-arguments)))
-  (--if-let (magit-get-push-branch)
-      (magit-lfs-pull-command it args)
-    (--if-let (magit-get-current-branch)
-        (user-error "No push-remote is configured for %s" it)
-      (user-error "No branch is checked out"))))
+(define-suffix-command magit-lfs-pull-from-pushremote (args)
+  "Magit binding for git lfs pull push-remote of the current branch with ARGS."
+  :if 'magit-get-current-branch
+  :description 'magit-pull--pushbranch-description
+  (interactive (list (magit-lfs-pull-arguments)))
+    (pcase-let ((`(,branch ,remote)
+               (magit--select-push-remote "pull from there")))
+      (run-hooks 'magit-credential-hook)
+      (magit-lfs-git-lfs-pull remote branch args)))
 
-(defun magit-lfs-pull-from-upstream (args)
-  "Magit binding for git lfs pull upstream."
-  (interactive
-   (list (magit-lfs-pull-arguments)))
-  (--if-let (magit-get-upstream-branch)
-      (progn (run-hooks 'magit-credential-hook)
-             (magit-lfs-with-lfs 'magit-run-git-with-editor
-               "pull" args (car (magit-split-branch-name it))))
-    (--if-let (magit-get-current-branch)
-        (user-error "No upstream is configured for %s" it)
-      (user-error "No branch is checked out"))))
+(define-suffix-command magit-lfs-pull-from-upstream (args)
+  "Magit binding for git lfs pull upstream with ARGS."
+  :if 'magit-get-current-branch
+  :description 'magit-pull--upstream-description
+  (interactive (list (magit-lfs-pull-arguments)))
+  (let* ((branch (or (magit-get-current-branch)
+                     (user-error "No branch is checked out")))
+         (remote (magit-get "branch" branch "remote"))
+         (merge  (magit-get "branch" branch "merge")))
+    (when (or current-prefix-arg
+              (not (or (magit-get-upstream-branch branch)
+                       (magit--unnamed-upstream-p remote merge))))
+      (magit-set-upstream-branch
+       branch (magit-read-upstream-branch
+               branch (format "Set upstream of %s and pull from there" branch)))
+      (setq remote (magit-get "branch" branch "remote"))
+      (setq merge  (magit-get "branch" branch "merge")))
+    (run-hooks 'magit-credential-hook)
+    (magit-lfs-git-lfs-pull remote merge args)))
 
-(defun magit-lfs-pull (source args)
-  "Magit binding for git lfs pull."
-  (interactive
-   (list (magit-read-remote-branch "Pull" nil nil nil t)
-         (magit-lfs-pull-arguments)))
-  (magit-lfs-pull-command source args))
+(defun magit-lfs-pull-elsewhere (source args)
+  "Magit binding for git lfs pull SOURCE with ARGS."
+  (interactive (list (magit-read-remote-branch "Pull" nil nil nil t)
+                     (magit-lfs-pull-arguments)))
+  (pcase-let ((`(,remote . ,branch)
+               (magit-get-tracked source)))
+    (magit-lfs-git-lfs-pull remote branch args)))
 
 
-(defun magit-lfs-push-command (branch target args)
+(defun magit-lfs-push-arguments nil
+  ""
+  (transient-args 'magit-lfs-push))
+
+(defun magit-lfs-git-lfs-push-raw (remote refspec args)
+  "Internal function for git lfs push REMOTE REFSPEC with ARGS."
   (run-hooks 'magit-credential-hook)
-  (-let [(remote . target)
-         (magit-split-branch-name target)]
-    (magit-lfs-with-lfs 'magit-run-git-async
-      "push" "-v" args remote
-      (format "%s:refs/heads/%s" branch target))))
+  (magit-lfs-with-lfs 'magit-run-git-async "push" "-v" args remote refspec))
 
-(defun magit-lfs-push-current-to-pushremote (args &optional push-remote)
-  "Magit binding for git lfs push push-remote."
+(defun magit-lfs-git-lfs-push (branch target args)
+  "Internal function for git lfs push with ARGS."
+  (pcase-let ((namespace (if (magit-get-tracked target) "" "refs/heads/"))
+              (`(,remote . ,target)
+               (magit-split-branch-name target)))
+    (magit-lfs-git-lfs-push-raw remote (format "%s:%s%s" branch namespace target) args)))
+
+(define-suffix-command magit-lfs-push-current-to-pushremote (args)
+  "Magit binding for git lfs push current branch to PUSH-REMOTE with ARGS."
+  :if 'magit-get-current-branch
+  :description 'magit-push--pushbranch-description
+  (interactive (list (magit-lfs-push-arguments)))
+  (pcase-let ((`(,_ ,remote)
+               (magit--select-push-remote "push there")))
+    (magit-lfs-git-lfs-push-raw remote "HEAD" args)))
+
+(define-suffix-command magit-lfs-push-current-to-upstream (args)
+  "Magit binding for git lfs push current branch to UPSTREAM with ARGS."
+  :if 'magit-get-current-branch
+  :description 'magit-push--upstream-description
+  (interactive (list (magit-lfs-push-arguments)))
+  (let* ((branch (or (magit-get-current-branch)
+                     (user-error "No branch is checked out")))
+         (remote (magit-get "branch" branch "remote"))
+         (merge  (magit-get "branch" branch "merge")))
+    (when (or current-prefix-arg
+              (not (or (magit-get-upstream-branch branch)
+                       (magit--unnamed-upstream-p remote merge)
+                       (magit--valid-upstream-p remote merge))))
+      (let* ((branches (-union (--map (concat it "/" branch)
+                                      (magit-list-remotes))
+                               (magit-list-remote-branch-names)))
+             (upstream (magit-completing-read
+                        (format "Set upstream of %s and push there" branch)
+                        branches nil nil nil 'magit-revision-history
+                        (or (car (member (magit-remote-branch-at-point) branches))
+                            (car (member "origin/master" branches)))))
+             (upstream (or (magit-get-tracked upstream)
+                           (magit-split-branch-name upstream))))
+        (setq remote (car upstream))
+        (setq merge  (cdr upstream))
+        (unless (string-prefix-p "refs/" merge)
+          ;; User selected a non-existent remote-tracking branch.
+          ;; It is very likely, but not certain, that this is the
+          ;; correct thing to do.  It is even more likely that it
+          ;; is what the user wants to happen.
+          (setq merge (concat "refs/heads/" merge))))
+      (cl-pushnew "--set-upstream" args :test #'equal))
+    (run-hooks 'magit-credential-hook)
+    (magit-lfs-git-lfs-push-raw remote (concat branch ":" merge) args)))
+
+(defun magit-lfs-push-current-to-elsewhere (target args)
+  "Magit binding for git lfs push current branch to TARGET with ARGS."
   (interactive
-   (list (magit-lfs-push-arguments)
-         (and (magit--push-current-set-pushremote-p current-prefix-arg)
-              (magit-read-remote
-               (if (eq magit-push-current-set-remote-if-missing 'default)
-                   "Set `remote.pushDefault' and push there"
-                 (format "Set `branch.%s.pushRemote' and push there"
-                         (magit-get-current-branch)))))))
-  (--if-let (magit-get-current-branch)
-      (progn (when push-remote
-               (setf (magit-get
-                      (if (eq magit-push-current-set-remote-if-missing 'default)
-                          "remote.pushDefault"
-                        (format "branch.%s.pushRemote"
-                                (magit-get-current-branch))))
-                     push-remote))
-             (-if-let (remote (magit-get-push-remote it))
-                 (if (member remote (magit-list-remotes))
-                     (magit-lfs-push-command it (concat remote "/" it) args)
-                   (user-error "Remote `%s' doesn't exist" remote))
-               (user-error "No push-remote is configured for %s" it)))
-    (user-error "No branch is checked out")))
+   (--if-let (magit-get-current-branch)
+       (list (magit-read-remote-branch (format "Push %s to" it) nil nil it 'confirm)
+             (magit-lfs-push-arguments))
+     (user-error "No branch is checked out")))
+  (magit-lfs-git-lfs-push (magit-get-current-branch) target args))
 
-(defun magit-lfs-push-current-to-upstream (args &optional upstream)
-  "Magit binding for git lfs push upstream."
+(defun magit-lfs-push-another-branch (branch target args)
+  "Magit binding for git lfs push BRANCH to TARGET with ARGS."
   (interactive
-   (list (magit-lfs-push-arguments)
-         (and (magit--push-current-set-upstream-p current-prefix-arg)
-              (magit-read-upstream-branch))))
-  (--if-let (magit-get-current-branch)
-      (progn
-        (when upstream
-          (magit-set-branch*merge/remote it upstream))
-        (-if-let (target (magit-get-upstream-branch it))
-            (magit-lfs-push-command it target args)
-          (user-error "No upstream is configured for %s" it)))
-    (user-error "No branch is checked out")))
+   (let ((branch (magit-read-local-branch-or-commit "Push")))
+     (list branch
+           (magit-read-remote-branch
+            (format "Push %s to" branch) nil
+            (if (magit-local-branch-p branch)
+                (or (magit-get-push-branch branch)
+                    (magit-get-upstream-branch branch))
+              (and (magit-rev-ancestor-p branch "HEAD")
+                   (or (magit-get-push-branch)
+                       (magit-get-upstream-branch))))
+            branch 'confirm)
+           (magit-lfs-push-arguments))))
+  (magit-lfs-git-lfs-push branch target args))
 
 
-(defun magit-lfs-update (args)
-  "Magit binding for git lfs update."
-  (interactive
-   (list (magit-lfs-fetch-arguments)))
-  (magit-lfs-with-lfs 'magit-run-git-async
-    "update" args))
+(defun magit-lfs-update-arguments ()
+  ""
+  (transient-args 'magit-lfs-update))
+
+(defun magit-lfs-update-hooks (args)
+  "Magit binding for git lfs update with ARGS."
+  (interactive (list (magit-lfs-update-arguments)))
+  (magit-lfs-with-lfs 'magit-run-git-async "update" args))
 
 
 

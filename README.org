@@ -11,7 +11,6 @@
 #+TOC: headlines local
 
 ** Installation
-
    1. In your emacs setting file, initialize [[https://github.com/melpa/melpa][melpa]] package.
    2. Follows instruction for your package managing method.
 
@@ -93,6 +92,9 @@
        git lfs update
      - ~!~
        git lfs fsck
+
+*** Broken changes
+    The binding for the initial popup was `&`, but it conflicts with a binding for `magit-do-async-shell-command`, so we changed the binding to `@`
 
 ** Todo List
    - Core functionality [2/3]
