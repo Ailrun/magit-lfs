@@ -4,13 +4,13 @@
 
 [Git LFS](https://git-lfs.github.com/) for [Magit](https://github.com/magit/magit), glorious Git client for Emacs!
 
-1.  [Installation](#org744768e)
-2.  [Magit Binding](#org26a7573)
-    1.  [Broken changes](#org4a16dc1)
-3.  [Todo List](#org30dd7d1)
+1.  [Installation](#org0c0544b)
+2.  [Magit Binding](#org70aa07a)
+    1.  [Broken changes](#orgb3f4739)
+3.  [Todo List](#org940adae)
 
 
-<a id="org744768e"></a>
+<a id="org0c0544b"></a>
 
 ## Installation
 
@@ -72,11 +72,11 @@
                   :require (magit))
 
 
-<a id="org26a7573"></a>
+<a id="org70aa07a"></a>
 
 ## Magit Binding
 
--   `&`
+-   `@`
     Initial commands for magit-lfs.
     -   `f`
         git lfs fetch
@@ -92,14 +92,14 @@
         git lfs fsck
 
 
-<a id="org4a16dc1"></a>
+<a id="orgb3f4739"></a>
 
 ### Broken changes
 
-The binding for the initial popup was \`&\`, but it conflicts with a binding for \`magit-do-async-shell-command\`, so we changed the binding to \`@\`
+The binding for the initial popup was `&`, but it conflicts with a binding for `magit-do-async-shell-command`, so we changed the binding to `@`
 
 
-<a id="org30dd7d1"></a>
+<a id="org940adae"></a>
 
 ## Todo List
 
