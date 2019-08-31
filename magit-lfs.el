@@ -5,7 +5,7 @@
 ;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
 ;; Created: 25 Feb 2017
-;; Version: 0.3.1
+;; Version: 0.4.0
 ;; Package-Requires: ((emacs "24.4") (magit "2.10.3") (dash "2.13.0"))
 ;; Keywords: magit git lfs tools vc
 ;; URL: https://github.com/ailrun/magit-lfs
@@ -79,6 +79,12 @@
   :version "0.0.1"
   :type 'string)
 
+(defcustom magit-lfs-suffix ":"
+  "Suffix key for magit-lfs in transient popup."
+  :group 'magit-lfs
+  :version "0.4.0"
+  :type 'string)
+
 (defun magit-lfs-with-lfs (magit-function command &rest args)
   "Internal function for magit-lfs to run MAGIT-FUNCTION with COMMAND and ARGS."
   (declare (indent 1))
@@ -99,10 +105,12 @@
    ("U" "update, Update hook for repo" magit-lfs-update)
    ("!" "fsck, Check file" magit-lfs-fsck)])
 
-(transient-insert-suffix 'magit-dispatch "!"
-  '("@" "Magit-LFS" magit-lfs))
+(transient-append-suffix 'magit-dispatch '(0 3 -1)
+  `(magit-lfs
+    :key ,magit-lfs-suffix
+    :description "Magit-LFS"))
 (define-key magit-status-mode-map
-  "@" #'magit-lfs)
+  magit-lfs-suffix #'magit-lfs)
 
 (define-transient-command magit-lfs-fetch ()
   ""
