@@ -94,7 +94,7 @@
 
 <a id="org82fd3a2"></a>
 
-### Broken changes
+### Braking changes
 
 The bindings for the initial popup were `&` and `@`, but they conflicted with bindings for other magit bindings, so I changed the binding to `:`
 
