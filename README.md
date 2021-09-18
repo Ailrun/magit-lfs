@@ -6,7 +6,7 @@
 
 1.  [Installation](#org8e78023)
 2.  [Magit Binding](#orgb5694bc)
-    1.  [Broken changes](#org82fd3a2)
+    1.  [Braking changes](#org82fd3a2)
 3.  [Todo List](#org34096ab)
 
 
