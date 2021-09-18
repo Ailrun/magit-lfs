@@ -2,10 +2,10 @@
 
 ;; Copyright (C) 2017 Junyoung Clare Jang
 
-;; Author: Junyoung Clare Jang <jjc9310@gmail.com>
-;; Maintainer: Junyoung Clare Jang <jjc9310@gmail.com>
+;; Author: Junyoung/Clare Jang <jjc9310@gmail.com>
+;; Maintainer: Junyoung/Clare Jang <jjc9310@gmail.com>
 ;; Created: 25 Feb 2017
-;; Version: 0.4.0
+;; Version: 0.4.1
 ;; Package-Requires: ((emacs "24.4") (magit "2.10.3") (dash "2.13.0"))
 ;; Keywords: magit git lfs tools vc
 ;; URL: https://github.com/ailrun/magit-lfs
