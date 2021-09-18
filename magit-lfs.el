@@ -105,7 +105,7 @@
    ("U" "update, Update hook for repo" magit-lfs-update)
    ("!" "fsck, Check file" magit-lfs-fsck)])
 
-(transient-append-suffix 'magit-dispatch '(0 3 -1)
+(transient-append-suffix 'magit-dispatch '(0 -1 -1)
   `(magit-lfs
     :key ,magit-lfs-suffix
     :description "Magit-LFS"))
