@@ -93,7 +93,7 @@
              magit-lfs-git-lfs-executable)
     (apply magit-function magit-lfs-git-lfs-command command args)))
 
-(define-transient-command magit-lfs ()
+(transient-define-prefix magit-lfs ()
   "Popup console for top-level magit-lfs commands."
   :man-page "git-lfs"
   ["Actions"
@@ -112,7 +112,7 @@
 (define-key magit-status-mode-map
   magit-lfs-suffix #'magit-lfs)
 
-(define-transient-command magit-lfs-fetch ()
+(transient-define-prefix magit-lfs-fetch ()
   ""
   :man-page "git-lfs-fetch"
   ["Arguments"
@@ -128,7 +128,7 @@
   ["Fetch"
    ("o" "another branch" magit-lfs-fetch-branch)])
 
-(define-transient-command magit-lfs-pull ()
+(transient-define-prefix magit-lfs-pull ()
   ""
   :man-page "git-lfs-pull"
   ["Arguments"
@@ -148,7 +148,7 @@
   ["Fetch"
    ("o" "another branch" magit-lfs-fetch-branch)])
 
-(define-transient-command magit-lfs-install ()
+(transient-define-prefix magit-lfs-install ()
   ""
   :man-page "git-lfs-install"
   ["Arguments"
@@ -158,7 +158,7 @@
    ("l" "Local repository's config" magit-lfs-install-to-local-config)
    ("g" "Global config" magit-lfs-install-to-global-config)])
 
-;; (define-transient-command magit-lfs-logs ()
+;; (transient-define-prefix magit-lfs-logs ()
 ;;   ""
 ;;   :man-page "git-lfs-logs"
 ;;   :actions '("Actions"
@@ -166,7 +166,7 @@
 ;;              (?c "Clear error logs" magit-lfs-logs-clear)
 ;;              (?s "Show logs" magit-lfs-logs-show)))
 
-(define-transient-command magit-lfs-push ()
+(transient-define-prefix magit-lfs-push ()
   ""
   :man-page "git-lfs-push"
   ["Arguments"
@@ -184,7 +184,7 @@
   ["Push"
    ("o" "another branch" magit-lfs-push-another-branch)])
 
-(define-transient-command magit-lfs-update ()
+(transient-define-prefix magit-lfs-update ()
   ""
   :man-page "git-lfs-update"
   ["Arguments"
