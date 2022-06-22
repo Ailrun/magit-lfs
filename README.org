@@ -93,7 +93,7 @@
      - ~!~
        git lfs fsck
 
-*** Broken changes
+*** Breaking changes
     The bindings for the initial popup were ~&~ and ~@~, but they conflicted with bindings for other magit bindings, so I changed the binding to ~:~
 
 ** Todo List
