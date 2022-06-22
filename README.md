@@ -6,7 +6,7 @@
 
 1.  [Installation](#org8e78023)
 2.  [Magit Binding](#orgb5694bc)
-    1.  [Braking changes](#org82fd3a2)
+    1.  [Breaking changes](#org82fd3a2)
 3.  [Todo List](#org34096ab)
 
 
@@ -94,7 +94,7 @@
 
 <a id="org82fd3a2"></a>
 
-### Braking changes
+### Breaking changes
 
 The bindings for the initial popup were `&` and `@`, but they conflicted with bindings for other magit bindings, so I changed the binding to `:`
 
