@@ -208,7 +208,7 @@
   (run-hooks 'magit-credential-hook)
   (magit-lfs-with-lfs 'magit-run-git-async "fetch" remote args))
 
-(define-suffix-command magit-lfs-fetch-from-pushremote (args)
+(transient-define-suffix magit-lfs-fetch-from-pushremote (args)
   "Magit binding for git lfs fetch push-remote of the current branch with ARGS."
   :description 'magit-fetch--pushremote-description
   (interactive (list (magit-lfs-fetch-arguments)))
@@ -221,7 +221,7 @@
         (magit-set remote var)))
     (magit-lfs-git-lfs-fetch remote args)))
 
-(define-suffix-command magit-lfs-fetch-from-upstream (upstream args)
+(transient-define-suffix magit-lfs-fetch-from-upstream (upstream args)
   "Magit binding for git lfs fetch UPSTREAM with ARGS."
   :if (lambda () (magit-get-current-remote t))
   :description (lambda () (magit-get-current-remote t))
