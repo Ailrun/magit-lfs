@@ -289,7 +289,7 @@
   (run-hooks 'magit-credential-hook)
   (magit-lfs-with-lfs 'magit-run-git-with-editor "pull" args remote branch))
 
-(define-suffix-command magit-lfs-pull-from-pushremote (args)
+(transient-define-suffix magit-lfs-pull-from-pushremote (args)
   "Magit binding for git lfs pull push-remote of the current branch with ARGS."
   :if 'magit-get-current-branch
   :description 'magit-pull--pushbranch-description
@@ -299,7 +299,7 @@
       (run-hooks 'magit-credential-hook)
       (magit-lfs-git-lfs-pull remote branch args)))
 
-(define-suffix-command magit-lfs-pull-from-upstream (args)
+(transient-define-suffix magit-lfs-pull-from-upstream (args)
   "Magit binding for git lfs pull upstream with ARGS."
   :if 'magit-get-current-branch
   :description 'magit-pull--upstream-description
@@ -344,7 +344,7 @@
                (magit-split-branch-name target)))
     (magit-lfs-git-lfs-push-raw remote (format "%s:%s%s" branch namespace target) args)))
 
-(define-suffix-command magit-lfs-push-current-to-pushremote (args)
+(transient-define-suffix magit-lfs-push-current-to-pushremote (args)
   "Magit binding for git lfs push current branch to PUSH-REMOTE with ARGS."
   :if 'magit-get-current-branch
   :description 'magit-push--pushbranch-description
@@ -353,7 +353,7 @@
                (magit--select-push-remote "push there")))
     (magit-lfs-git-lfs-push-raw remote "HEAD" args)))
 
-(define-suffix-command magit-lfs-push-current-to-upstream (args)
+(transient-define-suffix magit-lfs-push-current-to-upstream (args)
   "Magit binding for git lfs push current branch to UPSTREAM with ARGS."
   :if 'magit-get-current-branch
   :description 'magit-push--upstream-description
