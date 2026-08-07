@@ -335,7 +335,7 @@
 (defun magit-lfs-git-lfs-push-raw (remote refspec args)
   "Internal function for git lfs push REMOTE REFSPEC with ARGS."
   (run-hooks 'magit-credential-hook)
-  (magit-lfs-with-lfs 'magit-run-git-async "push" "-v" args remote refspec))
+  (magit-lfs-with-lfs 'magit-run-git-async "push" args remote refspec))
 
 (defun magit-lfs-git-lfs-push (branch target args)
   "Internal function for git lfs push with ARGS."
